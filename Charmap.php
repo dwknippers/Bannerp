@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 class Charmap {
 	public $characters = array();
+	const ESCAPE_CHAR = "%";
 
 	public function __construct(string $fontPath) {
 		$this->parseFontFile($fontPath);
@@ -32,19 +33,18 @@ class Charmap {
 				if (!$ignNextChar) {
 					if ($char == '"') {
 						break;
-					} else if ($char == '\\') {
+					} else if ($char == self::ESCAPE_CHAR) {
 						$ignNextChar = true;
 						continue;
 					}
 				} else {
 					$ignNextChar = false;
+					if ($char != self::ESCAPE_CHAR) continue;
 				}
 				$resStr .= $char;	
 			}
 
-			if (!empty($resStr)) {
-				array_push($charArr, $resStr);
-			}
+			if (!empty($resStr)) array_push($charArr, $resStr);
 		}
 	}
 }
